@@ -1,47 +1,146 @@
-SILK WAVES — FULLSCREEN STANDALONE WEBPAGE
+# Silk Waves Web
 
-Open SilkWaves.html in a modern Chrome, Edge, or Firefox browser.
-The page runs locally without external libraries or network access.
+**A browser-based recreation of the PlayStation 3 XMB animated background.**
 
-The shader fills the viewport and follows your local month and time at launch.
-Click anywhere on the background to cycle monthly palettes; use the upper-right
-gear (hover or click) to choose rendering quality, pause, restart, or restore
-calendar-based colors. The controls disappear when not hovered/focused.
+Silk Waves Web recreates the iconic flowing silk ribbons, soft lighting, and floating particles of the PlayStation 3's XrossMediaBar (XMB) background using WebGL2 and GLSL.
 
-Quality options: 540p, 720p, 1080p, 1440p, and up to 2160p (4K UHD).
-The actual drawing buffer matches the window aspect ratio and is capped at
-3840 pixels wide and 2160 pixels tall. 4K is very GPU-intensive and performance
-is not guaranteed; start low and increase gradually.
+The project preserves the minimalist aesthetic of the original experience—without the menus, icons, or interface elements.
 
-The WebGL2 renderer uses smaller intermediate textures for Buffers A, B and C,
-full resolution for Buffer D, and ping-pong feedback for A and D.
-Requires WebGL2 and EXT_color_buffer_float.
+Everything is rendered in real time on your GPU. No background videos, external rendering services, or additional frameworks are required.
 
-MIT License, Copyright (c) 2026 the MaiCord authors. The original shader
-license and credits are included in Common.glsl and embedded in the HTML.
+## Features
 
-Run python build.py in this directory to regenerate SilkWaves.html.
+- **Classic XMB aesthetic** — Flowing silk ribbons, dynamic lighting, and shimmering particles.
+- **Real-time GPU rendering** — Powered by WebGL2 and GLSL.
+- **Seasonal color palettes** — Twelve monthly palettes that transition throughout the year.
+- **Dynamic lighting** — Automatically adjusts to your local time, with manual day, dusk, and night options.
+- **Native resolution support** — Render at your display's resolution, including 4K and higher where supported.
+- **Adjustable frame rate** — Select a frame-rate limit or use uncapped rendering.
+- **Minimal interface** — Settings remain hidden until needed.
+- **Single-file deployment** — The complete experience can run from one HTML file.
+- **Responsive fullscreen layout** — Adapts to different display sizes and aspect ratios.
 
-Lighting selector: Current time (default) follows the device clock; Day fixes the shader clock to noon; Night fixes it to midnight. All three preserve the chosen month.
+## Getting Started
 
-OPTIMIZATION UPDATE
-- Added 30/60 FPS cap. 30 FPS can substantially reduce GPU usage at 4K.
-- No GPU draws while page is hidden, and only one redraw while paused.
-- Time/date uniforms now calculated once per rendered frame.
-- Live measured FPS display in settings (not a GPU timer).
-- WebGL2 and original shader visuals preserved.
+No installation is required to use the standalone webpage.
 
-CLEAN BACKGROUND UPDATE
-- Replaced click-anywhere month cycling with a Month dropdown (Automatic + January-December).
-- Settings gear and panel fully transparent until top-right corner hover/focus; pointer leaving hides it again.
-- Rendering and original artwork unchanged.
+1. Download the latest `index.html` from this repository.
+2. Open it in a modern browser such as Chrome, Edge, or Firefox with WebGL2 support.
+3. Enjoy the animation.
 
-PALETTE AND DUSK UPDATE
-- Month picker displays the actual top/bottom sky palette colors as gradient swatches.
-- Automatic mode remains the initial selection and follows device date/time.
-- Added Dusk (6 PM), a midpoint between noon and midnight, using the shader's existing dusk preset.
-- Original Common and buffer GLSL remain unchanged; only UI and date uniform control updated.
+Press **F11** to enter browser fullscreen mode.
 
-Native / Full resolution: chooses browser viewport CSS pixels multiplied by devicePixelRatio, with no artificial 4K cap. Subject to browser/GPU size and memory limits. Changing screen resolution or resizing the window updates the buffer size.
+Move your cursor to the upper-right corner to reveal the settings panel.
 
-Frame rate: Uncapped runs on every requestAnimationFrame callback. Browsers normally synchronize this to the monitor refresh rate, so it is not an unlimited/tearing FPS mode. Animation uses elapsed time; the original simulated cloth uses time-delta-adjusted 60 Hz steps.
+### Controls
+
+| Setting | Description |
+|---|---|
+| Month | Follow the calendar automatically or select one of 12 monthly palettes |
+| Time of day | Current time, Day, Dusk, or Night |
+| Resolution | Choose a fixed resolution or use Native / Full Resolution |
+| Frame rate | Limit rendering FPS or select Uncapped |
+| Pause / Resume | Temporarily pause the animation |
+| Restart | Reset the simulation to its initial state |
+
+By default, the background follows your computer's current date and local time.
+
+## How It Works
+
+Unlike a prerecorded video, Silk Waves generates its animation using GPU shaders.
+
+The effect consists of several rendering passes:
+
+| Shader | Purpose |
+|---|---|
+| `common.glsl` | Shared math, lighting, palettes, and simulation functions |
+| `buffer-a.glsl` | Cloth physics and particle simulation |
+| `buffer-b.glsl` | Ribbon geometry, projection, and particle sprites |
+| `buffer-c.glsl` | Ribbon intersections and particle visibility |
+| `buffer-d.glsl` | Ribbon lighting and glare |
+| `image.glsl` | Final image composition, tone mapping, and particles |
+
+The cloth simulation continuously evolves, producing smooth, organic wave movement rather than replaying a fixed animation loop.
+
+### Project Structure
+
+```text
+silk-waves-web/
+├── index.html
+├── runner.js
+├── build.py
+├── shaders/
+│   ├── common.glsl
+│   ├── buffer-a.glsl
+│   ├── buffer-b.glsl
+│   ├── buffer-c.glsl
+│   ├── buffer-d.glsl
+│   └── image.glsl
+├── README.md
+└── LICENSE
+```
+
+## Building from Source
+
+The standalone HTML contains the shader code and JavaScript renderer required to run the animation.
+
+The repository also includes the individual source files for easier modification and development.
+
+To rebuild the webpage, run:
+
+```bash
+python build.py
+```
+
+The build script assembles the source into a standalone HTML webpage.
+
+*Note: Check the build script's configured input and output paths before rebuilding.*
+
+## Performance
+
+Silk Waves is GPU-intensive, particularly at high resolutions.
+
+For the best experience:
+
+- Use a browser with hardware acceleration enabled.
+- Start at 1080p if you're unsure of your GPU's capabilities.
+- Increase the resolution for sharper output on powerful hardware.
+- Lower the frame rate or resolution to reduce GPU usage and power consumption.
+
+Native resolution and uncapped FPS are available, but actual performance depends on your graphics hardware, browser, and display.
+
+## Customization
+
+The shader includes configurable values for wave speed, brightness, glitter, glare, seasonal colors, and lighting.
+
+These settings can be modified in the GLSL source to create different variations while retaining the original animation style.
+
+The monthly palettes are defined in `common.glsl`.
+
+## Credits
+
+Silk Waves Web is based on **Silk Waves**, a GLSL recreation of the classic PlayStation 3 XMB background.
+
+The shader implementation credits the MaiCord authors and draws inspiration from:
+
+- **MaiCord Silk Waves** — [MaiCord Plugins](https://github.com/maj113/MaiCord-plugins)
+- **PlayStation-3-XMB** — [linkev/PlayStation-3-XMB](https://github.com/linkev/PlayStation-3-XMB)
+- **Shadertoy** — The original environment used to showcase the shader: [Silk Waves](https://www.shadertoy.com/view/N3yXWy)
+
+Special thanks to the developers and community members who have studied and recreated the visual effects of the PlayStation 3's XMB interface.
+
+## License
+
+This project incorporates shader code released under the **MIT License**.
+
+Copyright © 2026 the MaiCord authors.
+
+See [LICENSE](LICENSE) for the full license text and applicable attribution.
+
+PlayStation, PS3, and XrossMediaBar are trademarks of Sony Interactive Entertainment or their respective owners.
+
+This is an independent fan recreation and is not affiliated with or endorsed by Sony Interactive Entertainment.
+
+---
+
+*Inspired by one of the most memorable console interfaces of its generation.*
