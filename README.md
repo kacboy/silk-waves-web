@@ -8,6 +8,9 @@ The project preserves the minimalist aesthetic of the original experience—with
 
 Everything is rendered in real time on your GPU. No background videos, external rendering services, or additional frameworks are required.
 
+[![Silk Waves Web Preview](preview.png)](https://kacboy.com/xmb)
+*Experience the classic PS3 XMB background in your browser, without the menus.*
+
 ## Features
 
 - **Classic XMB aesthetic** — Flowing silk ribbons, dynamic lighting, and shimmering particles.
